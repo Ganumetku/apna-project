@@ -35,6 +35,8 @@
         margin-left: 2rem;
       }
 
+      
+
       </style>
     <div id="filters"> 
       <div class="filter">
@@ -104,13 +106,15 @@
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3" >
     <% for(let listing of allListings) { %>
       <a href="/listings/<%= listing._id %>" class="listing-link">
-    <div class="card col listing-card" >
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing.title" style="height:20rem;">
+    <div class="card col listing-card" data-location="<%= listing.location %>" data-price="<%= listing.price %>" >
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing.title" style="height:20rem; width: 20rem;">
         <div class="card-img-overlay"> Wellcome To New Journey</div>
         <div class="card-body">
+          
           <!-- <h5 class="card-title">Card title</h5> -->
           <p class="card-text"> <br> 
-             <b> <%= listing.title %> </b>
+             <b> <%= listing.title %> </b> <br>
+             <%= listing.location %> <br>
          <br> 
          &nbsp; <%= listing.price.toLocaleString("en-IN") %> / night 
           
@@ -136,5 +140,53 @@
      }
     }
    });
-</script>
+   
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get all listings
+    let allListings = Array.from(document.querySelectorAll(".listing-card"));
 
+    function filterListings(event) {
+      event.preventDefault(); // Prevent form submission
+
+      const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
+      const isNumber = !isNaN(searchQuery) && searchQuery !== "";
+
+      let anyVisible = false;
+
+      allListings.forEach((listing) => {
+        const title = listing.querySelector(".card-body .card-text b").textContent.toLowerCase();
+        const location = listing.dataset.location ? listing.dataset.location.toLowerCase() : "";
+        const price = listing.dataset.price ? parseInt(listing.dataset.price) : null;
+
+        const matchesTitle = title.includes(searchQuery);
+        const matchesLocation = location.includes(searchQuery);
+        const matchesPrice = isNumber ? price <= parseInt(searchQuery) : false;
+
+        if (matchesTitle || matchesLocation || matchesPrice) {
+          listing.style.display = "block"; // Show the listing
+          anyVisible = true;
+        } else {
+          listing.style.display = "none"; // Hide the listing
+        }
+      });
+
+      // Show a "No Listings Found" message if nothing matches
+      let noResultsMessage = document.getElementById("noResultsMessage");
+
+      if (!anyVisible) {
+        if (!noResultsMessage) {
+          noResultsMessage = document.createElement("h4");
+          noResultsMessage.id = "noResultsMessage";
+          noResultsMessage.classList.add("text-center", "mt-3");
+          noResultsMessage.textContent = "No listings found";
+          document.querySelector(".row").appendChild(noResultsMessage);
+        }
+      } else if (noResultsMessage) {
+        noResultsMessage.remove(); // Remove "No Listings Found" message if results exist
+      }
+    }
+
+    // Attach event listener to search button
+    document.querySelector(".search-btn").addEventListener("click", filterListings);
+  });
+</script>
