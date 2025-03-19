@@ -33,9 +33,11 @@
         <a class="nav-link" href="/listings">Explore</a>
       </div>
       <form class="d-flex ms-auto" role="search">
-        <input class="form-control me-2 search-inp" type="search" placeholder="Search destination" aria-label="Search">
-        <button class="btn search-btn" type="submit"> <i class="fa-solid fa-magnifying-glass"></i>Search</button>
-      </form>
+        <input class="form-control me-2 search-inp" id="searchInput" type="search" placeholder="Search by Title, Location, or Max Price" aria-label="Search">
+        <button class="btn search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+    </form>
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Airbnb your home</a>
         <% if (!currUser) { %>
