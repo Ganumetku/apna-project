@@ -39,57 +39,57 @@
 
       </style>
     <div id="filters"> 
-      <div class="filter">
+      <div class="filter" data-category="Trending">
         <div> <i class="fa-solid fa-fire"></i>
         </div>  <p>Trending</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Rooms">
         <div> <i class="fa-solid fa-house"></i>
         </div>  <p>Rooms</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Icomic Cities">
         <div> <i class="fa-solid fa-mountain-city"></i>
         </div>  <p>Iconic Cities</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Mountain">
         <div> <i class="fa-solid fa-mountain"></i>
         </div>  <p>Mountain</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="castles">
         <div> <i class="fa-brands fa-fort-awesome"></i>
         </div>  <p>castles</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Amazing Pool">
         <div> <i class="fa-solid fa-person-swimming"></i>
         </div>  <p>Amazing Pool</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Camping">
         <div> <i class="fa-solid fa-campground"></i>
         </div>  <p>Camping</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Farms">
         <div> <i class="fa-solid fa-cow"></i>
         </div>  <p>Farms</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Arctic">
         <div> <i class="fa-solid fa-snowflake"></i>
         </div>  <p>Arctic</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Domes">
         <div> <i class="fa-solid fa-igloo"></i>
         </div>  <p>Domes</p>
       </div>
 
-      <div class="filter">
+      <div class="filter"  data-category="Boats">
         <div> <i class="fa-solid fa-ship"></i>
         </div>  <p>Boats</p>
       </div>
@@ -140,6 +140,36 @@
      }
     }
    });
+
+
+
+
+   document.addEventListener("DOMContentLoaded", function () {
+  let allListings = Array.from(document.querySelectorAll(".listing-card"));
+  let filters = document.querySelectorAll(".filter");
+
+  // Add click event listeners to each filter icon
+  filters.forEach((filter) => {
+    filter.addEventListener("click", () => {
+      let category = filter.getAttribute("data-category");
+
+      // Filter listings based on category
+      allListings.forEach((listing) => {
+        let listingCategory = listing.querySelector(".card-body .card-text b").textContent.toLowerCase();
+
+        // Check if the listing title or location matches the selected category
+        if (listingCategory.includes(category.toLowerCase())) {
+          listing.style.display = "block"; // Show the listing
+        } else {
+          listing.style.display = "none"; // Hide the listing
+        }
+      });
+    });
+  });
+});
+  // Other filter functionality (e.g., by price, location, etc.) can go here
+
+
    
   document.addEventListener("DOMContentLoaded", function () {
     // Get all listings
@@ -189,4 +219,5 @@
     // Attach event listener to search button
     document.querySelector(".search-btn").addEventListener("click", filterListings);
   });
+
 </script>
