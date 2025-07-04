@@ -60,6 +60,11 @@ body.dark-theme {
 }
 
 /* Dark theme styles */
+
+.listing-link {
+  text-decoration: none;
+  color: inherit;
+}
 body.dark-theme .search-inp {
   background-color: #ffffff;
   color: #fff;
