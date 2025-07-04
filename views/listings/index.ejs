@@ -94,130 +94,69 @@
         </div>  <p>Boats</p>
       </div>
 
-         <div class="tax-toggle">
+      <div class="tax-toggle">
   <div class="form-check-reverse form-switch">
     <input class="form-check-input" type="checkbox" role="switch" id="themeToggle">
     <label class="form-check-label" for="themeToggle">Dark Mode</label>
   </div>
 </div>
 
+<button id="resetFilter" class="btn btn-outline-secondary ms-3">Reset Filters</button>
 
 
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3" >
-    <% for(let listing of allListings) { %>
-      <a href="/listings/<%= listing._id %>" class="listing-link">
-    <div class="card col listing-card" data-location="<%= listing.location %>" data-price="<%= listing.price %>" >
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing.title" style="height:20rem; width: 20rem;">
-        <div class="card-img-overlay"> Wellcome To New Journey</div>
-        <div class="card-body">
-          
-          <!-- <h5 class="card-title">Card title</h5> -->
-          <p class="card-text"> <br> 
-             <b> <%= listing.title %> </b> <br>
-             <%= listing.location %> <br>
-         <br> 
-         &nbsp; <%= listing.price.toLocaleString("en-IN") %>
-          
-         <i class="tax-info"> &nbsp; &nbsp; +18% GST</i><!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-          </p>
+
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+  <% for(let listing of allListings) { %>
+    <div class="col mb-4">
+      <a href="/listings/<%= listing._id %>" class="listing-link" style="text-decoration: none;">
+        <div class="card listing-card" data-location="<%= listing.location %>" data-price="<%= listing.price %>" data-title="<%= listing.title %>">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height:20rem; width: 20rem;">
+          <div class="card-img-overlay">Welcome To New Journey</div>
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= listing.title %></b><br>
+              <%= listing.location %><br><br>
+              ₹<%= listing.price.toLocaleString("en-IN") %>
+              <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
+            </p>
+          </div>
         </div>
-      </div>
-      <% } %>
-      </div>
-    </a>
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<script> 
         
     
-    
-<script>
-  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-   taxSwitch.addEventListener("click", () => {
-    let  taxInfo = document.getElementsByClassName("tax-info");
-     for(info of taxInfo){
-      if(info.style.display != "inline"){
-      info.style.display = "inline";
-     }else {
-      info.style.display = "none";
-     }
-    }
-   });
-
-
-
-
-   document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
   let allListings = Array.from(document.querySelectorAll(".listing-card"));
   let filters = document.querySelectorAll(".filter");
 
-  // Add click event listeners to each filter icon
   filters.forEach((filter) => {
     filter.addEventListener("click", () => {
-      let category = filter.getAttribute("data-category");
+      const category = filter.getAttribute("data-category").toLowerCase();
 
-      // Filter listings based on category
       allListings.forEach((listing) => {
-        let listingCategory = listing.querySelector(".card-body .card-text b").textContent.toLowerCase();
+        const title = listing.dataset.title.toLowerCase();
+        const location = listing.dataset.location.toLowerCase();
 
-        // Check if the listing title or location matches the selected category
-        if (listingCategory.includes(category.toLowerCase())) {
-          listing.style.display = "block"; // Show the listing
+        if (title.includes(category) || location.includes(category)) {
+          listing.parentElement.style.display = "block"; // show column
         } else {
-          listing.style.display = "none"; // Hide the listing
+          listing.parentElement.style.display = "none"; // hide column
         }
       });
     });
   });
 });
-  // Other filter functionality (e.g., by price, location, etc.) can go here
 
-
-   
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get all listings
-    let allListings = Array.from(document.querySelectorAll(".listing-card"));
-
-    function filterListings(event) {
-      event.preventDefault(); // Prevent form submission
-
-      const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
-      const isNumber = !isNaN(searchQuery) && searchQuery !== "";
-
-      let anyVisible = false;
-
-      allListings.forEach((listing) => {
-        const title = listing.querySelector(".card-body .card-text b").textContent.toLowerCase();
-        const location = listing.dataset.location ? listing.dataset.location.toLowerCase() : "";
-        const price = listing.dataset.price ? parseInt(listing.dataset.price) : null;
-
-        const matchesTitle = title.includes(searchQuery);
-        const matchesLocation = location.includes(searchQuery);
-        const matchesPrice = isNumber ? price <= parseInt(searchQuery) : false;
-
-        if (matchesTitle || matchesLocation || matchesPrice) {
-          listing.style.display = "block"; // Show the listing
-          anyVisible = true;
-        } else {
-          listing.style.display = "none"; // Hide the listing
-        }
-      });
-
-      // Show a "No Listings Found" message if nothing matches
-      let noResultsMessage = document.getElementById("noResultsMessage");
-
-      if (!anyVisible) {
-        if (!noResultsMessage) {
-          noResultsMessage = document.createElement("h4");
-          noResultsMessage.id = "noResultsMessage";
-          noResultsMessage.classList.add("text-center", "mt-3");
-          noResultsMessage.textContent = "No listings found";
-          document.querySelector(".row").appendChild(noResultsMessage);
-        }
-      } else if (noResultsMessage) {
-        noResultsMessage.remove(); // Remove "No Listings Found" message if results exist
-      }
-    }
-
-    // Attach event listener to search button
-    document.querySelector(".search-btn").addEventListener("click", filterListings);
+document.getElementById("resetFilter").addEventListener("click", () => {
+  let allCols = document.querySelectorAll(".listing-card");
+  allCols.forEach((card) => {
+    card.parentElement.style.display = "block";
   });
+});
 
 </script>
