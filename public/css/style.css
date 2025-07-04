@@ -22,8 +22,6 @@ body{
 }
 .nav-link{
     color: #222222 !important;
-}
-
 
 }
 .nav-link:hover {
@@ -42,6 +40,55 @@ body{
   transform: scale(0.97);
   opacity: 0.8;
 }
+.dark-theme .nav-link {
+  color: #ffffff !important;
+}
+
+.dark-theme .nav-link:hover {
+  color: #c78242 !important;
+}
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Light mode default */
+/* .search-inp {
+  background-color: #000000;
+  color: #000;
+  border: 1px solid #ced4da;
+}
+
+/* Dark theme styles */
+body.dark-theme .search-inp {
+  background-color: #ffffff;
+  color: #fff;
+  border: 1px solid #444;
+} */
+
+
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-theme .card {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.dark-theme .navbar {
+  background-color: #222;
+  color: #fff;
+}
+
+.dark-theme .form-control {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #444;
+}
+
+
 
 
 .f-info-links a{
@@ -148,3 +195,4 @@ justify-content: center;
 #map { 
     height: 400px;
 width: 80vp; }
+
