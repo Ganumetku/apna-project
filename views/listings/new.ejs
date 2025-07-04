@@ -20,7 +20,9 @@
          
         <div class="mb-3">
             <label for="image" class="form-label"> Upload Listing Image</label>
-            <input name="listing[image]" type="file" class="form-control" >
+            <input name="listing[image]" type="file" class="form-control" multiple>
+            
+            
             <div class="invalid-feedback"> Be something correction</div>
         </div>
 
@@ -40,11 +42,14 @@
             </div>
        
        
-       <div class="mb-3"> 
-        <label for="location " class="form-label">Location</label>
-        <input name="listing[location]" placeholder="Enter Location" type="text" class="form-control" required>
-        <div class="invalid-feedback">Please enter valid location</div>
-    </div>
+      <div class="mb-3"> 
+  <label for="location" class="form-label">Location</label>
+  <input id="locationInput" name="listing[location]" placeholder="Enter Location" type="text" class="form-control" required>
+  <div id="map" style="height: 400px;" class="mb-4"></div>
+  <div class="invalid-feedback">Please enter valid location</div>
+  
+</div>
+
 
        
    <br> <br>
@@ -53,4 +58,42 @@
     </form>
 </div>
 </div>
+
+<script>
+  mapboxgl.accessToken = '<%= process.env.MAP_TOKEN %>';
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [77.2090, 28.6139], // Default center (Delhi)
+    zoom: 5
+  });
+
+  let marker;
+
+  document.getElementById('locationInput').addEventListener('change', function (e) {
+    const location = e.target.value;
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxgl.accessToken}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.features.length > 0) {
+          const coords = data.features[0].center;
+
+          // Fly to location
+          map.flyTo({ center: coords, zoom: 10 });
+
+          // Add or move marker
+          if (marker) {
+            marker.setLngLat(coords);
+          } else {
+            marker = new mapboxgl.Marker({ color: 'red' }).setLngLat(coords).addTo(map);
+          }
+
+          // (Optional) store coords in hidden input
+          document.getElementById('lngLatInput').value = JSON.stringify(coords);
+        }
+      });
+  });
+</script>
+
 
