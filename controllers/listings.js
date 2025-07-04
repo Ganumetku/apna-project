@@ -66,20 +66,35 @@ module.exports.renderNewForm = async(req, res) => {
   };
 
 
-  module.exports.updatelisting = async (req,res) => {
-      let { id } = req.params;
-     let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing});
+module.exports.updatelisting = async (req, res) => {
+    const { id } = req.params;
 
-      if (typeof req.file !== "undefined"){
-      let url = req.file.path;
-      let filename = req.file.filename;
-      listing.image = {url, filename};
-      await listing.save();
-      }
-     req.flash("success","Listing Updated !");
-     res.redirect(`/listings/${id}`);
-    };
+    // Geocode new location using Mapbox
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1,
+        })
+        .send();
 
+    // Update the listing
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+    // If new image is uploaded
+    if (typeof req.file !== "undefined") {
+        const url = req.file.path;
+        const filename = req.file.filename;
+        listing.image = { url, filename };
+    }
+
+    // Update geometry with new coordinates
+    listing.geometry = geoData.body.features[0].geometry;
+
+    await listing.save();
+
+    req.flash("success", "Listing Updated!");
+    res.redirect(`/listings/${id}`);
+};
 
     module.exports.deletelisting = async (req,res) => {
         let {id} = req.params;
